@@ -1,0 +1,20 @@
+{
+  "name": "@wintersteve25/ragnarok-api",
+  "version": "0.1.0",
+  "description": "Ragnarok editor API for plugins and personal configs",
+  "main": "index.ts",
+  "scripts": {},
+  "author": "winterSteve25",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/winterSteve25/ragnarok-api.git"
+  },
+  "bugs": {
+    "url": "https://github.com/winterSteve25/ragnarok-api/issues"
+  },
+  "homepage": "https://github.com/winterSteve25/ragnarok-api#readme"
+}

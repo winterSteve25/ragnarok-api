@@ -1,4 +1,4 @@
-# NOTE: THIS IS IN DEVELOPMENT, DONT USE THIS YET
+# THIS IS IN DEVELOPMENT, DONT USE THIS YET
 
 ## Ragnarok API
 Welcome to Ragnarok! This API allows users to create custom configurations and plugins for the Ragnarok TextEditor/Development Environment, providing a personalized and tailored experience.

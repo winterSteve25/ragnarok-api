@@ -5,6 +5,9 @@
   "main": "index.ts",
   "scripts": {},
   "author": "winterSteve25",
+  "keywords": [
+    "ragnarok-editor"
+  ],
   "license": "MIT",
   "devDependencies": {
     "typescript": "^5.3.3"

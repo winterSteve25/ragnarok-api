@@ -1,21 +1,25 @@
-export type KeybindCallback = (captures: Array<string>) => {};
+export type KeybindCallback = (captures: Array<string>) => void;
 export type KeyModifier = "Ctrl" | "Super" | "Alt" | "Shift" | "None" | "Any";
 export type Key = string | KeyDetailed;
 
 export class Keybind {
-	trigger: Key;
-	sequence: Array<Key>;
-	captureLength: number;
-	callback: KeybindCallback;
 
-	private constructor(trigger: Key) {
+	public readonly name: string;
+	public trigger: Key;
+	public sequence: Array<Key>;
+	public captureLength: number;
+	public callback: KeybindCallback;
+
+	private constructor(name: string, trigger: Key, sequence: Array<Key>, captureLength: number, callback: KeybindCallback) {
+		this.name = name;
 		this.trigger = trigger;
-		this.sequence = [];
-		this.captureLength = 0;
+		this.sequence = sequence;
+		this.captureLength = captureLength;
+		this.callback = callback;
 	}
 
-	public static by(trigger: Key): Keybind {
-		return new Keybind(trigger);
+	public static by(name: string, trigger: Key): Keybind {
+		return new Keybind(name, trigger, [], 0, (_captures: Array<string>) => {});
 	}
 
 	public then(key: Key): Keybind {
@@ -37,4 +41,29 @@ export class Keybind {
 export interface KeyDetailed {
 	modifier?: KeyModifier,
 	key: string,
+}
+
+export class Keymap {
+	public map: Map<string, Keybind>;
+	public triggers: Map<Key, Array<string>>;
+
+	/**
+	* @param identifier identifier for the keybind. Must be unique. will cause function to return Error if a keybind with the same identifier already exists.
+	* @param keybind The keybind itself
+	* @returns If undefined, no error is thrown in this function, if error occured, its returned.
+	*/
+	public register(identifier: string, keybind: Keybind): Error | undefined {
+		if (this.map.has(identifier)) {
+			return new Error("");
+		}
+
+		if (!this.triggers.has(keybind.trigger)) {
+			this.triggers.set(keybind.trigger, []);
+		}
+
+		this.triggers.get(keybind.trigger)!.push(identifier);
+		this.map.set(identifier, keybind);
+
+		return undefined;
+	}
 }

@@ -67,7 +67,5 @@ export class Keymap {
 
 		this.triggers.get(keybind.trigger)!.push(identifier);
 		this.map.set(identifier, keybind);
-
-		return undefined;
 	}
 }

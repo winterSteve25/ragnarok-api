@@ -47,14 +47,18 @@ export class Keymap {
 	public map: Map<string, Keybind>;
 	public triggers: Map<Key, Array<string>>;
 
+	public constructor() {
+		this.map = new Map<string, Keybind>();
+		this.triggers = new Map<string, Array<string>>();
+	}
+
 	/**
-	* @param identifier identifier for the keybind. Must be unique. will cause function to return Error if a keybind with the same identifier already exists.
+	* @param identifier identifier for the keybind. Must be unique. will cause function to throw an Error if a keybind with the same identifier already exists.
 	* @param keybind The keybind itself
-	* @returns If undefined, no error is thrown in this function, if error occured, its returned.
 	*/
-	public register(identifier: string, keybind: Keybind): Error | undefined {
+	public register(identifier: string, keybind: Keybind) {
 		if (this.map.has(identifier)) {
-			return new Error("");
+			throw new Error(`Conflicting key identifier: ${identifier}`);
 		}
 
 		if (!this.triggers.has(keybind.trigger)) {

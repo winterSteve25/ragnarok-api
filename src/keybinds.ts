@@ -14,7 +14,7 @@ function keyToString(key: Key): string {
 }
 
 export type KeybindCallback = (captures: Array<string>) => void;
-export type KeyModifier = "Ctrl" | "Super" | "Alt" | "Shift";
+export type KeyModifier = "Ctrl" | "Alt" | "Shift";
 export type Key = string | KeyDetailed;
 
 export class Keybind {

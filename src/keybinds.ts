@@ -107,6 +107,14 @@ export class Keymap {
 
         return new KeybindQuery(query);
     }
+
+    /**
+     * @param id The identifier
+     * @summary Get a keybind by its identifier
+     */
+    public getById(id: string): Keybind | undefined {
+        return this.map.get(id);
+    }
 }
 
 export class KeybindQuery {

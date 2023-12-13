@@ -1,6 +1,6 @@
 {
   "name": "ragnarok-api",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Ragnarok editor API for plugins and personal configs",
   "main": "index.ts",
   "scripts": {},

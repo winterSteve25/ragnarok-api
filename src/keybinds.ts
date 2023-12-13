@@ -20,8 +20,8 @@ export type Key = string | KeyDetailed;
 export class Keybind {
 
     public readonly name: string;
-    public trigger: string;
-    public sequence: Array<string>;
+    trigger: string;
+    sequence: Array<string>;
     public captureLength: number;
     public callback: KeybindCallback;
 
@@ -51,6 +51,14 @@ export class Keybind {
     public callBack(callback: KeybindCallback): Keybind {
         this.callback = callback;
         return this;
+    }
+    
+    public setTrigger(key: Key) {
+        this.trigger = keyToString(key);
+    }
+    
+    public setSequence(keys: Key[]) {
+        this.sequence = keys.map(k => keyToString(k));
     }
 }
 

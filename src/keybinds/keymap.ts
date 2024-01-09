@@ -1,71 +1,4 @@
-function keyToString(key: Key): string {
-    if (typeof key === "string") {
-        return key;
-    }
-
-    if (key.modifier) {
-        const mods = Array.from(key.modifier).map(value => value as string);
-        mods.sort();
-        mods.push(key.key);
-        return mods.join("+");
-    }
-
-    return key.key;
-}
-
-export type KeybindCallback = (captures: Array<string>) => void;
-export type KeyModifier = "Ctrl" | "Alt" | "Shift";
-export type Key = string | KeyDetailed;
-
-export class Keybind {
-
-    public readonly name: string;
-    trigger: string;
-    sequence: Array<string>;
-    public captureLength: number;
-    public callback: KeybindCallback;
-
-    private constructor(name: string, trigger: string, sequence: Array<string>, captureLength: number, callback: KeybindCallback) {
-        this.name = name;
-        this.trigger = trigger;
-        this.sequence = sequence;
-        this.captureLength = captureLength;
-        this.callback = callback;
-    }
-
-    public static by(name: string, trigger: Key): Keybind {
-        return new Keybind(name, keyToString(trigger), [], 0, (_captures: Array<string>) => {
-        });
-    }
-
-    public then(key: Key): Keybind {
-        this.sequence.push(keyToString(key));
-        return this;
-    }
-
-    public capture(length: number): Keybind {
-        this.captureLength = length;
-        return this;
-    }
-
-    public callBack(callback: KeybindCallback): Keybind {
-        this.callback = callback;
-        return this;
-    }
-    
-    public setTrigger(key: Key) {
-        this.trigger = keyToString(key);
-    }
-    
-    public setSequence(keys: Key[]) {
-        this.sequence = keys.map(k => keyToString(k));
-    }
-}
-
-export interface KeyDetailed {
-    modifier?: Set<KeyModifier>,
-    key: string,
-}
+import {Key, Keybind} from "./bindTypes";
 
 export class Keymap {
     private map: Map<string, Keybind>;
@@ -76,11 +9,10 @@ export class Keymap {
         this.triggers = new Map<string, Array<string>>();
     }
 
-    /**
-     * @param identifier Identifier for the keybind, must be unique
-     * @param keybind The keybind itself
-     * @exception Error will cause function to throw an Error if a keybind with the same identifier already exists.
-     */
+    public create(identifier: string) {
+        return new KeybindBuilder(this, identifier);
+    }
+
     public register(identifier: string, keybind: Keybind) {
         if (this.map.has(identifier)) {
             throw new Error(`Conflicting key identifier: ${identifier}`);
@@ -149,7 +81,7 @@ export class KeybindQuery {
         if (this.inner.length === 1) {
             return this.inner[0];
         }
-        
+
         return undefined;
     }
 }

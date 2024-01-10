@@ -1,37 +1,77 @@
-import { EditorContext } from "../editor";
-import {Keymap} from "./keymap";
+import { Key, KeybindCallback, MotionDestination, MotionKeybind } from ".";
+import { Keymap, keyToString } from "./keymap";
 
-class BaseKeybindBuilder {
-    protected readonly identifier: string;
-    protected readonly keymap: Keymap;
+abstract class BaseKeybindBuilder<T> {
+    protected constructor(
+		protected identifier: string,
+		protected trigger: string,
+		protected keymap: Keymap,
+		protected sequence: string[],
+		protected description?: string,
+	) {
+    }
 
-    protected constructor(identifier: string, keymap: Keymap) {
-        this.identifier = identifier;
-        this.keymap = keymap;
+	public then(key: Key) {
+		this.sequence.push(keyToString(key));
+		return this;
+	}
+
+	public describe(description: string) {
+		this.description = description;
+		return this;
+	}
+
+	public abstract register(callback: T): void;
+}
+
+export class KeybindBuilder extends BaseKeybindBuilder<KeybindCallback> {
+    public constructor(identifier: string, trigger: string, keymap: Keymap, sequence: string[], description?: string) {
+        super(identifier, trigger, keymap, sequence, description);
+    }
+
+	public motion(): MotionKeybindBuilder {
+		return new MotionKeybindBuilder(this.identifier, this.trigger, this.keymap, this.sequence, this.description);
+	}
+
+    public register(callback: KeybindCallback): void {
+		this.keymap.register(this.identifier, {
+			identifier: this.identifier,
+			trigger: this.trigger,
+			sequence: this.sequence,
+			description: this.description,
+			onTrigger: callback
+		});
     }
 }
 
-export class KeybindBuilder extends BaseKeybindBuilder {
+export class MotionKeybindBuilder extends BaseKeybindBuilder<MotionDestination> {
 
-    private description: string;
-	private onTrigger: (context: EditorContext, capture: string[]) => void;
-    private trigger: string;
-    private sequence: Array<string>;
 	private captureLength: number;
 
-    public constructor(identifier: string, keymap: Keymap) {
-        super(identifier, keymap);
+    public constructor(
+		identifier: string,
+		trigger: string,
+		keymap: Keymap,
+		sequence: string[],
+		description?: string,
+	) {
+        super(identifier, trigger, keymap, sequence, description);
+		this.captureLength = 0;
     }
 
-	public register() {
-		this.keymap.register(this.identifier, {
-			identifier: this.identifier,
-			description: this.description,
-			onTrigger: this.onTrigger,
-			trigger: this.trigger,
-			sequence: this.sequence,
-			captureLength: this.captureLength
-		});
+	public capture(length: number) {
+		this.captureLength = length;
+		return this;
 	}
 
+	public register(destination: MotionDestination) {
+		this.keymap.register(this.identifier, new MotionKeybind(
+			this.identifier,
+			this.trigger,
+			this.captureLength,
+			destination,
+			this.sequence,
+			this.description
+		))
+	}
 }

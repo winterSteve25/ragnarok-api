@@ -1,5 +1,5 @@
-import { Keymap } from "./keybinds/bindTypes";
 import { Command } from "./commands";
+import { Keymap } from "./keybinds";
 
 export interface RagnarokPlugin { 
 	onLoad(): Promise<void>;

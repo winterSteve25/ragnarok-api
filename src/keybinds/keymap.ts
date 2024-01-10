@@ -1,7 +1,7 @@
 import {Key, Keybind} from "./bindTypes";
 import { KeybindBuilder } from "./builders";
 
-function keyToString(key: Key): string {
+export function keyToString(key: Key): string {
 	if (typeof key === "string") {
 		return key;
 	}
@@ -26,8 +26,8 @@ export class Keymap {
         this.triggers = new Map<string, Array<string>>();
     }
 
-    public create(identifier: string) {
-        return new KeybindBuilder(identifier, this);
+    public create(identifier: string, trigger: string) {
+        return new KeybindBuilder(identifier, trigger, this, []);
     }
 
     public register(identifier: string, keybind: Keybind) {

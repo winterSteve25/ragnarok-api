@@ -1,5 +1,5 @@
+import { EditorContext } from "../editor";
 import {Keymap} from "./keymap";
-import {build} from "vite";
 
 class BaseKeybindBuilder {
     protected readonly identifier: string;
@@ -12,10 +12,26 @@ class BaseKeybindBuilder {
 }
 
 export class KeybindBuilder extends BaseKeybindBuilder {
+
+    private description: string;
+	private onTrigger: (context: EditorContext, capture: string[]) => void;
+    private trigger: string;
+    private sequence: Array<string>;
+	private captureLength: number;
+
     public constructor(identifier: string, keymap: Keymap) {
         super(identifier, keymap);
     }
-}
 
-export class CaptureKeybindBuilder {
+	public register() {
+		this.keymap.register(this.identifier, {
+			identifier: this.identifier,
+			description: this.description,
+			onTrigger: this.onTrigger,
+			trigger: this.trigger,
+			sequence: this.sequence,
+			captureLength: this.captureLength
+		});
+	}
+
 }

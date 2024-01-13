@@ -1,4 +1,21 @@
 import {Key, Keybind} from "./bindTypes";
+import { KeybindBuilder } from "./builders";
+
+export function keyToString(key: Key): string {
+	if (typeof key === "string") {
+		return key;
+	}
+
+	if (key.modifier) {
+		const mods = Array.from(key.modifier).map(value => value as string);
+		mods.sort();
+		mods.push(key.key);
+		return mods.join("+");
+	}
+
+	return key.key;
+}
+
 
 export class Keymap {
     private map: Map<string, Keybind>;
@@ -9,8 +26,8 @@ export class Keymap {
         this.triggers = new Map<string, Array<string>>();
     }
 
-    public create(identifier: string) {
-        return new KeybindBuilder(this, identifier);
+    public create(identifier: string, trigger: string) {
+        return new KeybindBuilder(identifier, trigger, this, []);
     }
 
     public register(identifier: string, keybind: Keybind) {

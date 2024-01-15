@@ -3,9 +3,16 @@ import { EditorContext } from "../editor";
 export type KeyModifier = "Ctrl" | "Alt";
 export type Key = string | KeyDetailed;
 
-export type EditorContextSetter = (setter: (ctx: EditorContext) => void) => void;
-export type MotionDestination = (ctx: Readonly<EditorContext>, capture?: string[]) => [number, number];
+export type ActionCallback = (set: (setter: (ctx: EditorContext) => void) => void, motion: MotionRange) => void;
 export type KeybindCallback = (set: EditorContextSetter, data: Partial<KeybindData>) => void;
+export type CapturePredicate = (cap: string[], last: string) => boolean;
+export type DestProvider = (ctx: Readonly<EditorContext>, capture?: string[]) => [number, number];
+export type EditorContextSetter = (setter: (ctx: EditorContext) => void) => void;
+
+export interface MotionRange {
+	start: [number, number];
+	end: [number, number];
+};
 
 export interface Keybind {
     identifier: string;
@@ -16,8 +23,9 @@ export interface Keybind {
 }
 
 export interface KeybindData {
-	capture: string[],
-	motion: MotionDestination,
+	capture: string[];
+	range: MotionRange;
+	motionMultiplier: number;
 }
 
 export class MotionKeybind implements Keybind {
@@ -25,9 +33,9 @@ export class MotionKeybind implements Keybind {
 	public constructor(
 		public identifier: string,
 		public trigger: string,
-		public captureLength: number,
-		public destination: MotionDestination,
+		public destination: DestProvider,
 		public sequence: string[],
+		public finishCapture?: CapturePredicate,
 		public description?: string,
 	) {
 	}
@@ -44,15 +52,15 @@ export class MotionKeybind implements Keybind {
 export class ActionKeybind implements Keybind {
 	public constructor(
 		public identifier: string,
-		public description: string,
 		public trigger: string,
+		public act: ActionCallback,
 		public sequence: string[],
-		public act: (set: (setter: (ctx: EditorContext) => void) => void, motion?: MotionDestination) => void
+		public description?: string,
 	) {
 	}
 
     onTrigger = (set: (setter: (ctx: EditorContext) => void) => void, data: Partial<KeybindData>) => {
-		this.act(set, data.motion);
+		this.act(set, data.range);
 	};
 }
 

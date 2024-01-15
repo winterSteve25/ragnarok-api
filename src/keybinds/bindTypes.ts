@@ -36,7 +36,7 @@ export class MotionKeybind implements Keybind {
 		set((ctx) => {
 			const dest = this.destination(ctx, data.capture);
 			ctx.cursorPosition = dest[0];
-			ctx.cursorLine = dest[1]
+			ctx.cursorLine = dest[1];
 		});
 	};
 }

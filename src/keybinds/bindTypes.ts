@@ -6,7 +6,7 @@ export type Key = string | KeyDetailed;
 export type ActionCallback = (set: (setter: (ctx: EditorContext) => void) => void, motion: MotionRange) => void;
 export type KeybindCallback = (set: EditorContextSetter, data: Partial<KeybindData>) => void;
 export type CapturePredicate = (cap: string[], last: string) => boolean;
-export type DestProvider = (ctx: Readonly<EditorContext>, capture?: string[]) => [number, number];
+export type DestProvider = (ctx: Readonly<EditorContext>, data: Partial<KeybindData>) => [number, number];
 export type EditorContextSetter = (setter: (ctx: EditorContext) => void) => void;
 
 export interface MotionRange {
@@ -42,7 +42,7 @@ export class MotionKeybind implements Keybind {
 
     onTrigger = (set: (setter: (ctx: EditorContext) => void) => void, data: Partial<KeybindData>) => {
 		set((ctx) => {
-			const dest = this.destination(ctx, data.capture);
+			const dest = this.destination(ctx, data);
 			ctx.cursorPosition = dest[0];
 			ctx.cursorLine = dest[1];
 		});

@@ -24,7 +24,7 @@ abstract class BaseKeybindBuilder<T> {
 	public abstract register(callback: T): void;
 }
 
-export class KeybindBuilder extends BaseKeybindBuilder<KeybindCallback> {
+export class KeybindBuilder extends BaseKeybindBuilder<[boolean, KeybindCallback]> {
     public constructor(identifier: string, trigger: string, keymap: Keymap, sequence: string[], description?: string) {
         super(identifier, trigger, keymap, sequence, description);
     }
@@ -37,13 +37,14 @@ export class KeybindBuilder extends BaseKeybindBuilder<KeybindCallback> {
 		return new ActionKeybindBuilder(this.identifier, this.trigger, this.keymap, this.sequence, this.description);
 	}
 
-    public register(callback: KeybindCallback): void {
+    public register(data: [boolean, KeybindCallback]): void {
 		this.keymap.register(this.identifier, {
 			identifier: this.identifier,
 			trigger: this.trigger,
 			sequence: this.sequence,
 			description: this.description,
-			onTrigger: callback
+			onTrigger: data[1],
+			requiresBuffer: data[0]
 		});
     }
 }

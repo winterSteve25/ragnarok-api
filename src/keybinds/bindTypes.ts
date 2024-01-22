@@ -20,6 +20,7 @@ export interface Keybind {
     sequence: string[];
 	onTrigger: KeybindCallback;
     description?: string;
+	requiresBuffer: boolean;
 }
 
 export interface KeybindData {
@@ -29,6 +30,8 @@ export interface KeybindData {
 }
 
 export class MotionKeybind implements Keybind {
+	
+	requiresBuffer = true;
 
 	public constructor(
 		public identifier: string,
@@ -50,6 +53,9 @@ export class MotionKeybind implements Keybind {
 }
 
 export class ActionKeybind implements Keybind {
+
+	requiresBuffer = true;
+	
 	public constructor(
 		public identifier: string,
 		public trigger: string,

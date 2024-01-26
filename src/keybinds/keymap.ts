@@ -47,13 +47,13 @@ export class Keymap {
 
     /**
      * @param trigger The trigger key
-     * @return Returns undefined when no keybinds are triggered by the given key. <br/>
+     * @return Returns null when no keybinds are triggered by the given key. <br/>
      * Returns a KeybindQuery if keybind(s) are triggered by the given key. The query can be updated.
      */
-    public get(trigger: Key): KeybindQuery | undefined {
+    public get(trigger: Key): KeybindQuery | null {
         const keys = this.triggers.get(keyToString(trigger));
         if (!keys || keys.length === 0) {
-            return undefined;
+            return null;
         }
 
         const query: Keybind[] = [];
@@ -69,7 +69,7 @@ export class Keymap {
      * @param id The identifier
      * @summary Get a keybind by its identifier
      */
-    public getById(id: string): Keybind | undefined {
+    public getById(id: string): Keybind | null {
         return this.map.get(id);
     }
 }
@@ -92,13 +92,13 @@ export class KeybindQuery {
     }
 
     /**
-     * @return Returns undefined if there are more than one matching keybinds left, returns the keybind left when there is only 1 matching left.
+     * @return Returns null if there are more than one matching keybinds left, returns the keybind left when there is only 1 matching left.
      */
-    public conclude(): Keybind | undefined {
+    public conclude(): Keybind | null {
         if (this.inner.length === 1) {
             return this.inner[0];
         }
 
-        return undefined;
+        return null;
     }
 }

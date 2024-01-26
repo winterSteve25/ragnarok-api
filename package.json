@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/winterSteve25/ragnarok-api/issues"
   },
-  "homepage": "https://github.com/winterSteve25/ragnarok-api#readme"
+  "homepage": "https://github.com/winterSteve25/ragnarok-api#readme",
+  "dependencies": {
+    "vscode-piece-tree": "^1.2.0"
+  }
 }

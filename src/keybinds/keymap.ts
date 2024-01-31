@@ -52,6 +52,7 @@ export class Keymap {
      */
     public get(trigger: Key): KeybindQuery | null {
         const keys = this.triggers.get(keyToString(trigger));
+        
         if (!keys || keys.length === 0) {
             return null;
         }
@@ -61,8 +62,11 @@ export class Keymap {
         for (const key of keys) {
             query.push(this.map.get(key));
         }
-
-        return new KeybindQuery(query);
+        
+        const kbq = new KeybindQuery(query);
+        console.log(kbq);
+        
+        return kbq;
     }
 
     /**
@@ -85,10 +89,12 @@ export class KeybindQuery {
     /**
      * @param input The next input key
      * @summary filters all matching keybind for those that match the next character in the sequence
+     * @return Returns if any keybinds match input
      */
-    public update(input: Key) {
+    public update(input: Key): boolean {
         this.inner = this.inner.filter((keybind) => keybind.sequence[this.index] === keyToString(input));
         this.index++;
+        return this.inner.length > 0;
     }
 
     /**
@@ -96,7 +102,8 @@ export class KeybindQuery {
      */
     public conclude(): Keybind | null {
         if (this.inner.length === 1) {
-            return this.inner[0];
+            const kb = this.inner[0];
+            return kb.sequence.length === this.index ? kb : null;
         }
 
         return null;

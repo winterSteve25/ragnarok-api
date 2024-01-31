@@ -63,10 +63,7 @@ export class Keymap {
             query.push(this.map.get(key));
         }
         
-        const kbq = new KeybindQuery(query);
-        console.log(kbq);
-        
-        return kbq;
+        return new KeybindQuery(query);
     }
 
     /**
